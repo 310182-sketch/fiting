@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react-swc';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: '/fiting/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
