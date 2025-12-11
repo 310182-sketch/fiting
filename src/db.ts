@@ -48,6 +48,30 @@ export interface WorkoutExerciseStatus {
   completedAt?: string;
 }
 
+export interface BodyMeasurement {
+  id?: number;
+  date: string; // ISO date string YYYY-MM-DD
+  weight: number;
+  bodyFat?: number;
+  note?: string;
+}
+
+export interface Program {
+  id?: number;
+  name: string;
+  description?: string;
+  weeks: number;
+}
+
+export interface ProgramDay {
+  id?: number;
+  programId: number;
+  week: number;
+  day: number;
+  name: string;
+  templateId: number;
+}
+
 export class FitingDB extends Dexie {
   exercises!: Table<Exercise, number>;
   templates!: Table<WorkoutTemplate, number>;
@@ -55,6 +79,9 @@ export class FitingDB extends Dexie {
   sets!: Table<SetRecord, number>;
   settings!: Table<AppSettings, number>;
   statuses!: Table<WorkoutExerciseStatus, number>;
+  measurements!: Table<BodyMeasurement, number>;
+  programs!: Table<Program, number>;
+  programDays!: Table<ProgramDay, number>;
 
   constructor() {
     super('fiting');
@@ -72,6 +99,13 @@ export class FitingDB extends Dexie {
       sets: '++id, workoutId, exerciseId, isWarmup',
       settings: 'id',
       statuses: '++id, workoutId, exerciseId'
+    });
+    this.version(3).stores({
+      measurements: '++id, date'
+    });
+    this.version(4).stores({
+      programs: '++id, name',
+      programDays: '++id, programId, [programId+week+day]'
     });
   }
 }
@@ -404,6 +438,7 @@ export interface ExerciseHistoryPoint {
   maxWeight: number;
   totalVolume: number;
   maxReps: number;
+  estimated1RM: number;
 }
 
 export async function getExerciseHistory(dbInstance: FitingDB, exerciseId: number): Promise<ExerciseHistoryPoint[]> {
@@ -431,6 +466,7 @@ export async function getExerciseHistory(dbInstance: FitingDB, exerciseId: numbe
     let maxWeight = 0;
     let maxReps = 0;
     let totalVolume = 0;
+    let max1RM = 0;
 
     for (const s of wSets) {
       const w = s.weight || 0;
@@ -442,15 +478,34 @@ export async function getExerciseHistory(dbInstance: FitingDB, exerciseId: numbe
         maxReps = r;
       }
       totalVolume += w * r;
+
+      // Epley formula: 1RM = w * (1 + r/30)
+      if (w > 0 && r > 0) {
+        const e1rm = w * (1 + r / 30);
+        if (e1rm > max1RM) max1RM = e1rm;
+      }
     }
 
     history.push({
       date: new Date(workout.startTime),
       maxWeight,
       maxReps,
-      totalVolume
+      totalVolume,
+      estimated1RM: Math.round(max1RM)
     });
   }
 
   return history.sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+export async function getBodyMeasurements(dbInstance: FitingDB): Promise<BodyMeasurement[]> {
+  return await dbInstance.measurements.orderBy('date').toArray();
+}
+
+export async function addBodyMeasurement(dbInstance: FitingDB, measurement: Omit<BodyMeasurement, 'id'>) {
+  return await dbInstance.measurements.add(measurement as BodyMeasurement);
+}
+
+export async function deleteBodyMeasurement(dbInstance: FitingDB, id: number) {
+  return await dbInstance.measurements.delete(id);
 }

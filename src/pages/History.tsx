@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { db, Workout, getWorkoutDetails, Exercise, SetRecord } from '@/db';
+import ShareModal from '@/components/ShareModal';
 
 export default function History() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<number | null>(null);
+  const [shareWorkoutId, setShareWorkoutId] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -33,33 +35,62 @@ export default function History() {
             key={w.id}
             workout={w}
             onClick={() => setSelectedWorkoutId(w.id!)}
+            onShare={() => setShareWorkoutId(w.id!)}
           />
         ))}
       </div>
+      {shareWorkoutId && (
+        <ShareModal 
+          workoutId={shareWorkoutId} 
+          onClose={() => setShareWorkoutId(null)} 
+        />
+      )}
     </div>
   );
 }
 
-function HistoryItem({ workout, onClick }: { workout: Workout; onClick: () => void }) {
+function HistoryItem({ workout, onClick, onShare }: { workout: Workout; onClick: () => void; onShare: () => void }) {
   const [summary, setSummary] = useState<string>('');
 
   useEffect(() => {
     (async () => {
       const details = await getWorkoutDetails(db, workout.id!);
-      const date = new Date(workout.startTime);
-      const label = date.toLocaleString();
       const totalSets = details.sets.filter((s) => !s.isWarmup).length;
-      setSummary(`${label} · ${details.template?.name ?? '未指定模板'} · 正式組 ${totalSets} 組`);
+      setSummary(`${details.template?.name ?? '未指定模板'} · 正式組 ${totalSets} 組`);
     })();
-  }, [workout.id, workout.startTime]);
+  }, [workout.id]);
+
+  const date = new Date(workout.startTime);
 
   return (
-    <button
+    <div 
       onClick={onClick}
-      className="w-full text-left rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-xs text-slate-200 hover:bg-slate-800 transition-colors"
+      className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 active:bg-slate-800 transition-colors cursor-pointer"
     >
-      {summary}
-    </button>
+      <div>
+        <div className="font-medium text-slate-200 text-sm">
+          {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+        <div className="text-xs text-slate-500 mt-1">
+          {summary || '載入中...'}
+        </div>
+      </div>
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          onShare();
+        }}
+        className="p-2 text-slate-400 hover:text-emerald-400"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+      </button>
+    </div>
   );
 }
 

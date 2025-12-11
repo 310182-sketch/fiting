@@ -361,16 +361,16 @@ function ExerciseHistoryView({ exerciseId, onClose }: { exerciseId: number; onCl
                 <span className="text-slate-400 text-xs">{h.date.toLocaleDateString()}</span>
                 <div className="flex gap-4">
                   <div className="text-right">
+                    <div className="text-[10px] text-slate-500">1RM (估)</div>
+                    <div className="font-medium text-amber-400">{h.estimated1RM} kg</div>
+                  </div>
+                  <div className="text-right">
                     <div className="text-[10px] text-slate-500">最大重量</div>
                     <div className="font-medium text-emerald-400">{h.maxWeight} kg</div>
                   </div>
                   <div className="text-right">
                     <div className="text-[10px] text-slate-500">最大次數</div>
                     <div className="font-medium text-slate-200">{h.maxReps}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[10px] text-slate-500">總容量</div>
-                    <div className="font-medium text-slate-200">{h.totalVolume}</div>
                   </div>
                 </div>
               </div>

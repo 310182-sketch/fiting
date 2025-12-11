@@ -5,6 +5,8 @@ import StartWorkout from '@/pages/StartWorkout';
 import History from '@/pages/History';
 import Settings from '@/pages/Settings';
 import WorkoutPage from '@/pages/WorkoutPage';
+import Programs from '@/pages/Programs';
+import ProgramDetails from '@/pages/ProgramDetails';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/programs/:id" element={<ProgramDetails />} />
           <Route path="/start" element={<StartWorkout />} />
           <Route path="/workout/:id" element={<WorkoutPage />} />
           <Route path="/history" element={<History />} />
@@ -51,12 +55,12 @@ function App() {
           歷史
         </NavLink>
         <NavLink
-          to="/templates"
+          to="/programs"
           className={({ isActive }) =>
             `flex-1 py-2 text-center ${isActive ? 'text-emerald-400' : 'text-slate-400'}`
           }
         >
-          模板
+          計畫
         </NavLink>
         <NavLink
           to="/settings"
