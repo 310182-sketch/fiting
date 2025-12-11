@@ -107,14 +107,14 @@ export default function Templates() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-100">訓練模板</h2>
+          <h2 className="fiting-section-title">訓練模板</h2>
           <p className="text-xs text-slate-500 mt-1">
             建立自己的課表，之後在「開始」頁面從模板快速開啟訓練。
           </p>
         </div>
         <button
           onClick={beginCreate}
-          className="rounded-lg bg-emerald-600 text-xs font-medium text-slate-50 px-3 py-1.5"
+          className="fiting-cta-primary text-xs px-3 py-1.5"
         >
           新增模板
         </button>
@@ -122,14 +122,14 @@ export default function Templates() {
 
       <div className="space-y-3">
         {templates.length === 0 && (
-          <p className="text-xs text-slate-500">
+          <div className="fiting-card-soft p-4 text-xs text-slate-500">
             目前還沒有自訂模板，先新增一個常用課表吧。
-          </p>
+          </div>
         )}
         {templates.map(({ template, exercises }) => (
           <div
             key={template.id}
-            className="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm flex items-start justify-between gap-2"
+            className="fiting-card-soft px-3 py-2 text-sm flex items-start justify-between gap-2"
           >
             <div>
               <div className="font-medium text-slate-50 mb-1">{template.name}</div>
@@ -175,7 +175,7 @@ export default function Templates() {
       </div>
 
       {hasEditor && (
-        <section className="mt-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 space-y-2 text-sm">
+        <section className="mt-2 fiting-card-soft p-3 space-y-2 text-sm">
           <h3 className="text-xs font-semibold text-slate-100 mb-1">
             {isCreating ? '新增模板' : '編輯模板'}
           </h3>

@@ -133,10 +133,13 @@ export default function WorkoutPage() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold text-slate-100 mb-2">進行中訓練</h2>
+      <div>
+        <h2 className="fiting-section-title">進行中訓練</h2>
+        <p className="text-xs text-slate-500 mt-1">專心完成每一組，系統會自動替你記錄。</p>
+      </div>
 
       {restRemainingSeconds !== null && (
-        <section className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-xs flex flex-col gap-3">
+        <section className="fiting-card-soft p-3 text-xs flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-slate-300 mb-1">休息倒數</div>
@@ -212,7 +215,7 @@ export default function WorkoutPage() {
         </section>
       )}
 
-      <form onSubmit={handleAddSet} className="space-y-3 rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-sm">
+      <form onSubmit={handleAddSet} className="space-y-3 fiting-card-soft p-3 text-sm">
         <div className="space-y-1">
           <label className="text-xs text-slate-400">動作</label>
           <select
@@ -280,7 +283,7 @@ export default function WorkoutPage() {
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-emerald-500 text-slate-950 font-semibold py-2 text-sm mt-1"
+          className="w-full mt-1 fiting-cta-primary justify-center"
         >
           新增一組
         </button>
@@ -291,7 +294,7 @@ export default function WorkoutPage() {
           const setList = grouped.get(ex.id!) ?? [];
           if (setList.length === 0) return null;
           return (
-            <div key={ex.id} className="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2">
+            <div key={ex.id} className="fiting-card-soft px-3 py-2">
               <div className="flex items-center justify-between mb-1">
                 <div className="font-medium text-slate-100 flex items-center gap-2">
                   <span className={exerciseCompleted[ex.id!] ? 'text-emerald-300' : ''}>{ex.name}</span>

@@ -9,3 +9,29 @@
 body {
   @apply bg-slate-950 text-slate-50 antialiased;
 }
+
+@layer components {
+  .fiting-page {
+    @apply max-w-xl mx-auto px-4 pt-4 pb-6 space-y-4;
+  }
+
+  .fiting-card {
+    @apply rounded-2xl border border-slate-800/80 bg-slate-900/70 shadow-[0_18px_45px_rgba(15,23,42,0.85)];
+  }
+
+  .fiting-card-soft {
+    @apply rounded-2xl border border-slate-800/70 bg-slate-900/60;
+  }
+
+  .fiting-section-title {
+    @apply text-sm font-semibold text-slate-100 tracking-tight;
+  }
+
+  .fiting-pill-muted {
+    @apply inline-flex items-center gap-1 rounded-full bg-slate-900/70 px-2 py-1 text-[11px] text-slate-400;
+  }
+
+  .fiting-cta-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_rgba(16,185,129,0.65)] hover:bg-emerald-400 transition-colors;
+  }
+}

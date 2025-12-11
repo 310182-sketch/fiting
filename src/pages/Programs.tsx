@@ -47,17 +47,20 @@ export default function Programs() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">訓練計畫</h2>
+        <div>
+          <h2 className="fiting-section-title">訓練計畫</h2>
+          <p className="text-xs text-slate-500 mt-1">用多週規劃替自己安排有節奏的訓練週期。</p>
+        </div>
         <div className="flex gap-2">
           <button 
             onClick={() => navigate('/templates')}
-            className="px-3 py-1.5 bg-slate-800 text-slate-300 text-sm rounded-lg"
+            className="px-3 py-1.5 rounded-full bg-slate-900 text-slate-300 text-xs border border-slate-700/70 hover:bg-slate-800"
           >
             管理模板
           </button>
           <button 
             onClick={createSampleProgram}
-            className="px-3 py-1.5 bg-emerald-600 text-white text-sm rounded-lg"
+            className="fiting-cta-primary text-xs px-3 py-1.5"
           >
             建立範例
           </button>
@@ -66,14 +69,14 @@ export default function Programs() {
 
       <div className="grid gap-4">
         {programs.map(p => (
-          <div key={p.id} className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-            <h3 className="font-semibold text-lg">{p.name}</h3>
-            <p className="text-slate-400 text-sm mb-3">{p.description}</p>
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+          <div key={p.id} className="p-4 fiting-card-soft">
+            <h3 className="font-semibold text-base text-slate-50">{p.name}</h3>
+            <p className="text-slate-400 text-xs mb-3">{p.description}</p>
+            <div className="flex items-center gap-2 text-xs text-slate-500">
               <span>{p.weeks} 週</span>
             </div>
             <button 
-              className="mt-3 w-full py-2 bg-slate-800 rounded-lg text-sm font-medium"
+              className="mt-3 w-full rounded-full bg-slate-900 text-slate-100 text-xs font-medium py-2 hover:bg-slate-800 border border-slate-700/70"
               onClick={() => navigate(`/programs/${p.id}`)}
             >
               查看詳情
@@ -82,7 +85,7 @@ export default function Programs() {
         ))}
         
         {programs.length === 0 && (
-          <div className="text-center py-8 text-slate-500">
+          <div className="fiting-card-soft py-8 text-center text-sm text-slate-500">
             尚無訓練計畫
           </div>
         )}

@@ -36,9 +36,9 @@ export default function ShareModal({ workoutId, onClose }: { workoutId: number, 
   }, 0);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
-      <div className="bg-slate-900 rounded-xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div ref={cardRef} className="p-6 bg-gradient-to-br from-slate-900 to-slate-800 text-slate-50 border border-slate-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onClick={onClose}>
+      <div className="w-full max-w-sm rounded-2xl border border-slate-800/80 bg-slate-950/80 shadow-[0_24px_80px_rgba(15,23,42,0.95)] overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div ref={cardRef} className="p-6 bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 text-slate-50 border-b border-slate-800/80">
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-3xl font-bold text-emerald-400 tracking-tighter">Fiting</h3>
@@ -80,10 +80,12 @@ export default function ShareModal({ workoutId, onClose }: { workoutId: number, 
           </div>
         </div>
 
-        <div className="p-4 flex gap-2 bg-slate-950">
-          <button onClick={onClose} className="flex-1 py-2 text-slate-400 text-sm">Close</button>
-          <button onClick={handleDownload} className="flex-1 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium">
-            Download Image
+        <div className="p-4 flex gap-2 bg-slate-950/90">
+          <button onClick={onClose} className="flex-1 py-2 rounded-full border border-slate-700 text-slate-400 text-xs hover:bg-slate-900">
+            關閉
+          </button>
+          <button onClick={handleDownload} className="flex-1 py-2 fiting-cta-primary text-xs">
+            下載分享卡片
           </button>
         </div>
       </div>

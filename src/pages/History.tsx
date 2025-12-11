@@ -25,10 +25,15 @@ export default function History() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold text-slate-100 mb-2">歷史訓練</h2>
+      <div>
+        <h2 className="fiting-section-title">歷史訓練</h2>
+        <p className="text-xs text-slate-500 mt-1">回顧每次訓練，觀察自己的節奏與進步。</p>
+      </div>
       <div className="space-y-3">
         {workouts.length === 0 && (
-          <p className="text-sm text-slate-400">尚無訓練紀錄，從「開始」頁面建立一筆吧。</p>
+          <div className="fiting-card-soft p-4 text-center text-sm text-slate-400">
+            尚無訓練紀錄，從「開始」頁面建立第一筆吧。
+          </div>
         )}
         {workouts.map((w) => (
           <HistoryItem
@@ -63,9 +68,9 @@ function HistoryItem({ workout, onClick, onShare }: { workout: Workout; onClick:
   const date = new Date(workout.startTime);
 
   return (
-    <div 
+    <div
       onClick={onClick}
-      className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 active:bg-slate-800 transition-colors cursor-pointer"
+      className="flex items-center justify-between p-3 fiting-card-soft cursor-pointer hover:border-emerald-500/50 transition-colors"
     >
       <div>
         <div className="font-medium text-slate-200 text-sm">
@@ -120,17 +125,17 @@ function WorkoutDetail({ workoutId, onBack }: { workoutId: number; onBack: () =>
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-2">
         <button
           onClick={onBack}
-          className="rounded-lg border border-slate-700 px-3 py-1 text-xs text-slate-300 hover:bg-slate-800"
+          className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 hover:bg-slate-800"
         >
           返回
         </button>
         <h2 className="text-sm font-semibold text-slate-100">訓練詳情</h2>
       </div>
 
-      <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4 space-y-2">
+      <div className="fiting-card-soft p-4 space-y-2">
         <div className="text-xs text-slate-400">時間：{date}</div>
         {duration !== null && (
            <div className="text-xs text-slate-400">
