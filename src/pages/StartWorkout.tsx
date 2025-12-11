@@ -20,13 +20,16 @@ export default function StartWorkout() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold text-slate-100 mb-2">選擇模板開始訓練</h2>
+      <div>
+        <h2 className="fiting-section-title">選擇模板開始訓練</h2>
+        <p className="text-xs text-slate-500 mt-1">挑一套課表，快速進入今天的訓練模式。</p>
+      </div>
       <div className="space-y-3">
         {templates.map((t) => (
           <button
             key={t.id}
             onClick={() => handleStart(t.id!)}
-            className="w-full rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-left text-sm hover:border-emerald-500"
+            className="w-full text-left text-sm fiting-card-soft px-3 py-2 hover:border-emerald-500/50 transition-colors"
           >
             <div className="font-medium text-slate-50 mb-1">{t.name}</div>
             <TemplateSummary templateId={t.id!} />

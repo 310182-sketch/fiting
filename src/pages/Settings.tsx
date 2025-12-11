@@ -28,10 +28,43 @@ export default function Settings() {
     setExercises(ex);
   };
 
-  const handleUnitChange = async (unit: WeightUnit) => {
-    const next: AppSettings = { id: 1, weightUnit: unit };
+  const upsertSettings = async (partial: Partial<AppSettings>) => {
+    const prev =
+      (await db.settings.get(1)) ?? ({ id: 1, weightUnit: 'kg' as WeightUnit } as AppSettings);
+    const next: AppSettings = { ...prev, ...partial };
     await db.settings.put(next);
     setSettings(next);
+  };
+
+  const handleUnitChange = async (unit: WeightUnit) => {
+    await upsertSettings({ weightUnit: unit });
+  };
+
+  const handleWeeklyTargetChange = async (value: string) => {
+    if (!value) {
+      await upsertSettings({ weeklyTargetDays: undefined });
+      return;
+    }
+    const num = parseInt(value, 10);
+    if (Number.isNaN(num) || num <= 0) {
+      await upsertSettings({ weeklyTargetDays: undefined });
+      return;
+    }
+    const clamped = Math.min(num, 7);
+    await upsertSettings({ weeklyTargetDays: clamped });
+  };
+
+  const handleBodyWeightTargetChange = async (value: string) => {
+    if (!value) {
+      await upsertSettings({ bodyWeightTarget: undefined });
+      return;
+    }
+    const num = parseFloat(value);
+    if (Number.isNaN(num) || num <= 0) {
+      await upsertSettings({ bodyWeightTarget: undefined });
+      return;
+    }
+    await upsertSettings({ bodyWeightTarget: num });
   };
 
   const handleExport = async () => {
@@ -140,8 +173,11 @@ export default function Settings() {
 
   return (
     <div className="space-y-6">
-      <section>
-        <h2 className="text-sm font-semibold text-slate-100 mb-2">重量單位</h2>
+      <section className="fiting-card-soft p-4 space-y-3">
+        <div>
+          <h2 className="fiting-section-title">重量單位</h2>
+          <p className="text-xs text-slate-500 mt-1">選擇你習慣的訓練重量單位，會套用在整個 app。</p>
+        </div>
         <div className="flex gap-2 text-sm">
           {(['kg', 'lb'] as WeightUnit[]).map((u) => (
             <button
@@ -159,8 +195,50 @@ export default function Settings() {
         </div>
       </section>
 
-      <section className="space-y-2 text-sm">
-        <h2 className="text-sm font-semibold text-slate-100 mb-1">資料備份</h2>
+      <section className="fiting-card-soft p-4 space-y-3 text-sm">
+        <div>
+          <h2 className="fiting-section-title">訓練目標</h2>
+          <p className="text-xs text-slate-500 mt-1">
+            設定每週想訓練幾天，以及你的目標體重，方便 Dashboard 幫你追蹤進度。
+          </p>
+        </div>
+        <div className="space-y-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-slate-300">每週目標訓練天數（1–7 天）</label>
+            <input
+              type="number"
+              min={1}
+              max={7}
+              inputMode="numeric"
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-50 placeholder-slate-500"
+              placeholder="例如：3（代表每週訓練 3 天）"
+              value={settings?.weeklyTargetDays ?? ''}
+              onChange={(e) => void handleWeeklyTargetChange(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-slate-300">
+              目標體重（{(settings?.weightUnit ?? 'kg').toUpperCase()}，選填）
+            </label>
+            <input
+              type="number"
+              min={1}
+              step="0.1"
+              inputMode="decimal"
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-50 placeholder-slate-500"
+              placeholder="例如：70.0"
+              value={settings?.bodyWeightTarget ?? ''}
+              onChange={(e) => void handleBodyWeightTargetChange(e.target.value)}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="fiting-card-soft p-4 space-y-3 text-sm">
+        <div>
+          <h2 className="fiting-section-title mb-1">資料備份</h2>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={handleExport}
@@ -178,8 +256,8 @@ export default function Settings() {
         </p>
       </section>
 
-      <section className="space-y-3 text-sm">
-        <h2 className="text-sm font-semibold text-slate-100 mb-1">動作管理</h2>
+      <section className="fiting-card-soft p-4 space-y-3 text-sm">
+        <h2 className="fiting-section-title mb-1">動作管理</h2>
 
         <form onSubmit={handleAddExercise} className="space-y-2">
           <div className="flex flex-col gap-2">
@@ -216,7 +294,7 @@ export default function Settings() {
         </form>
 
         {exercises.length > 0 ? (
-          <div className="space-y-1 max-h-64 overflow-y-auto rounded-lg border border-slate-800 bg-slate-900/60 p-2">
+          <div className="space-y-1 max-h-64 overflow-y-auto rounded-lg border border-slate-800/80 bg-slate-950/60 p-2">
             {exercises.map((ex) => (
               <div
                 key={ex.id}
@@ -273,8 +351,8 @@ export default function Settings() {
       </section>
 
       {editingId !== null && (
-        <section className="space-y-2 text-sm">
-          <h2 className="text-sm font-semibold text-slate-100 mb-1">編輯動作</h2>
+        <section className="fiting-card-soft p-4 space-y-2 text-sm">
+          <h2 className="fiting-section-title mb-1">編輯動作</h2>
           <div className="space-y-2">
             <input
               className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-50 placeholder-slate-500"
@@ -344,10 +422,10 @@ function ExerciseHistoryView({ exerciseId, onClose }: { exerciseId: number; onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-4 shadow-2xl">
+      <div className="w-full max-w-md rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.95)]">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-slate-100">{exerciseName} 歷史紀錄</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-200">
+          <h3 className="text-sm font-semibold text-slate-100">{exerciseName} 歷史紀錄</h3>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-200 text-xs">
             ✕
           </button>
         </div>
@@ -357,7 +435,7 @@ function ExerciseHistoryView({ exerciseId, onClose }: { exerciseId: number; onCl
         ) : (
           <div className="max-h-[60vh] overflow-y-auto space-y-2">
             {history.map((h, i) => (
-              <div key={i} className="flex items-center justify-between rounded-lg bg-slate-800/50 px-3 py-2 text-sm">
+              <div key={i} className="flex items-center justify-between rounded-lg bg-slate-900/70 px-3 py-2 text-sm border border-slate-800/80">
                 <span className="text-slate-400 text-xs">{h.date.toLocaleDateString()}</span>
                 <div className="flex gap-4">
                   <div className="text-right">

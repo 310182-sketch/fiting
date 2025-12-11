@@ -38,6 +38,8 @@ export interface SetRecord {
 export interface AppSettings {
   id: number;
   weightUnit: WeightUnit;
+  weeklyTargetDays?: number;
+  bodyWeightTarget?: number;
 }
 
 export interface WorkoutExerciseStatus {
@@ -496,6 +498,81 @@ export async function getExerciseHistory(dbInstance: FitingDB, exerciseId: numbe
   }
 
   return history.sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+export interface ExercisePRSummary {
+  bestWeight: number;
+  best1RM: number;
+  bestDate: Date | null;
+}
+
+export async function getExercisePR(dbInstance: FitingDB, exerciseId: number): Promise<ExercisePRSummary> {
+  const history = await getExerciseHistory(dbInstance, exerciseId);
+  if (history.length === 0) {
+    return { bestWeight: 0, best1RM: 0, bestDate: null };
+  }
+
+  let best1RM = 0;
+  let bestWeight = 0;
+  let bestDate: Date | null = null;
+
+  for (const h of history) {
+    if (h.estimated1RM > best1RM) {
+      best1RM = h.estimated1RM;
+      bestWeight = h.maxWeight;
+      bestDate = h.date;
+    }
+  }
+
+  return { bestWeight, best1RM, bestDate };
+}
+
+export interface WeeklyGoalProgress {
+  targetDays: number | null;
+  completedDays: number;
+  streakDays: number;
+}
+
+export async function getWeeklyGoalProgress(dbInstance: FitingDB): Promise<WeeklyGoalProgress> {
+  const settings = await dbInstance.settings.get(1);
+  const targetDays = settings?.weeklyTargetDays ?? null;
+
+  const workouts = await dbInstance.workouts.toArray();
+  const today = new Date();
+  const start = startOfWeek(today);
+  const end = endOfWeek(start);
+
+  const dayKey = (d: Date) => d.toLocaleDateString('en-CA');
+
+  const daysWithWorkoutsThisWeek = new Set<string>();
+  const allDaysWithWorkouts = new Set<string>();
+
+  for (const w of workouts) {
+    const d = new Date(w.startTime);
+    const key = dayKey(d);
+    allDaysWithWorkouts.add(key);
+    if (d >= start && d < end) {
+      daysWithWorkoutsThisWeek.add(key);
+    }
+  }
+
+  // Compute streak: count back from today until遇到沒有訓練的日期
+  let streakDays = 0;
+  const cursor = new Date(today);
+  cursor.setHours(0, 0, 0, 0);
+
+  while (true) {
+    const key = dayKey(cursor);
+    if (!allDaysWithWorkouts.has(key)) break;
+    streakDays += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return {
+    targetDays,
+    completedDays: daysWithWorkoutsThisWeek.size,
+    streakDays
+  };
 }
 
 export async function getBodyMeasurements(dbInstance: FitingDB): Promise<BodyMeasurement[]> {

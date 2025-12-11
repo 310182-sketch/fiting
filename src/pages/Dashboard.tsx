@@ -10,7 +10,6 @@ function Heatmap() {
       const workouts = await db.workouts.toArray();
       const map: Record<string, boolean> = {};
       workouts.forEach(w => {
-        // Use local date string for consistency
         const date = new Date(w.startTime).toLocaleDateString('en-CA');
         map[date] = true;
       });
@@ -30,9 +29,13 @@ function Heatmap() {
         const dateStr = d.toLocaleDateString('en-CA');
         const active = activity[dateStr];
         return (
-          <div 
-            key={i} 
-            className={`w-2 h-2 rounded-sm ${active ? 'bg-emerald-500' : 'bg-slate-800'}`}
+          <div
+            key={i}
+            className={`w-2 h-2 rounded-sm transition-colors ${
+              active
+                ? 'bg-emerald-400/90 shadow-[0_0_10px_rgba(52,211,153,0.9)]'
+                : 'bg-slate-800/80'
+            }`}
             title={dateStr}
           />
         );
@@ -105,15 +108,25 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4">
-      <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-semibold text-slate-100">本週概況</h2>
+      <section className="relative overflow-hidden fiting-card border-emerald-500/20 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-950">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-emerald-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -left-16 bottom-[-48px] h-40 w-40 rounded-full bg-emerald-500/5 blur-3xl" />
+
+        <div className="relative flex items-start justify-between mb-4">
+          <div>
+            <h2 className="fiting-section-title text-emerald-400">本週概況</h2>
+            <p className="text-xs text-slate-400 mt-1">過去 7 天的訓練節奏與累積量</p>
+          </div>
+          <div className="fiting-pill-muted">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-slate-500">STREAK</span>
             <Heatmap />
+          </div>
         </div>
+
         {!summary ? (
-          <p className="text-slate-500 text-sm">載入中...</p>
+          <p className="relative text-slate-400 text-sm">載入中...</p>
         ) : (
-          <div className="space-y-2">
+          <div className="relative grid grid-cols-2 gap-3 pt-1">
             <StatRow
               label="訓練天數"
               value={summary.current.trainingDays}
@@ -138,9 +151,9 @@ export default function Dashboard() {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+      <section className="fiting-card">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-sm font-semibold text-slate-100">體重追蹤</h2>
+          <h2 className="fiting-section-title">體重追蹤</h2>
           <button 
             onClick={() => setShowWeightModal(true)}
             className="text-xs text-emerald-400 hover:text-emerald-300"
@@ -199,14 +212,14 @@ export default function Dashboard() {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <h2 className="text-sm font-semibold text-slate-100 mb-2">快速開始</h2>
+      <section className="fiting-card">
+        <h2 className="fiting-section-title mb-2">快速開始</h2>
         <p className="text-sm text-slate-400 mb-3">從模板選擇訓練，或查看最近一次訓練。</p>
         
         {lastTemplate && (
           <button
             onClick={handleQuickStart}
-            className="w-full mb-3 flex items-center justify-center rounded-lg bg-emerald-600 text-slate-50 text-sm font-semibold py-3 hover:bg-emerald-500 transition-colors"
+            className="w-full mb-3 flex items-center justify-center fiting-cta-primary"
           >
             再次進行「{lastTemplate.name}」
           </button>
@@ -215,13 +228,13 @@ export default function Dashboard() {
         <div className="flex gap-2">
           <a
             href="/start"
-            className="flex-1 inline-flex items-center justify-center rounded-lg bg-slate-800 text-slate-50 text-sm font-semibold py-2 hover:bg-slate-700"
+            className="flex-1 inline-flex items-center justify-center rounded-full bg-slate-900 text-slate-100 text-sm font-semibold py-2 hover:bg-slate-800 border border-slate-700/70"
           >
             從模板開始訓練
           </a>
           <a
             href="/history"
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-slate-700 text-slate-100 text-sm py-2"
+            className="flex-1 inline-flex items-center justify-center rounded-full border border-slate-700/70 text-slate-300 text-sm py-2 hover:bg-slate-900/60"
           >
             查看歷史
           </a>
