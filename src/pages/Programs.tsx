@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { db, Program, ProgramDay, WorkoutTemplate } from '@/db';
 import { useNavigate } from 'react-router-dom';
+import Templates from './Templates';
 
 export default function Programs() {
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [activeTab, setActiveTab] = useState<'templates' | 'programs'>('templates');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,47 +48,72 @@ export default function Programs() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">訓練計畫</h2>
-        <div className="flex gap-2">
-          <button 
-            onClick={() => navigate('/templates')}
-            className="px-3 py-1.5 bg-slate-800 text-slate-300 text-sm rounded-lg"
-          >
-            管理模板
-          </button>
-          <button 
-            onClick={createSampleProgram}
-            className="px-3 py-1.5 bg-emerald-600 text-white text-sm rounded-lg"
-          >
-            建立範例
-          </button>
-        </div>
+      <div className="flex bg-slate-200/50 p-1 rounded-xl">
+        <button
+          onClick={() => setActiveTab('templates')}
+          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
+            activeTab === 'templates' 
+              ? 'bg-white text-emerald-700 shadow-sm' 
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          訓練模板
+        </button>
+        <button
+          onClick={() => setActiveTab('programs')}
+          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
+            activeTab === 'programs' 
+              ? 'bg-white text-emerald-700 shadow-sm' 
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          多週計畫
+        </button>
       </div>
 
-      <div className="grid gap-4">
-        {programs.map(p => (
-          <div key={p.id} className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-            <h3 className="font-semibold text-lg">{p.name}</h3>
-            <p className="text-slate-400 text-sm mb-3">{p.description}</p>
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <span>{p.weeks} 週</span>
+      {activeTab === 'templates' ? (
+        <div className="pt-2">
+          <Templates />
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">訓練計畫</h2>
+            <div className="btn-group-sm">
+              <button 
+                onClick={createSampleProgram}
+                className="btn-primary"
+              >
+                建立範例
+              </button>
             </div>
-            <button 
-              className="mt-3 w-full py-2 bg-slate-800 rounded-lg text-sm font-medium"
-              onClick={() => navigate(`/programs/${p.id}`)}
-            >
-              查看詳情
-            </button>
           </div>
-        ))}
-        
-        {programs.length === 0 && (
-          <div className="text-center py-8 text-slate-500">
-            尚無訓練計畫
+
+          <div className="grid gap-4">
+            {programs.map(p => (
+              <div key={p.id} className="p-4 rounded-xl bg-white border border-slate-200">
+                <h3 className="font-semibold text-lg">{p.name}</h3>
+                <p className="text-slate-600 text-sm mb-3">{p.description}</p>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <span>{p.weeks} 週</span>
+                </div>
+                <button 
+                  className="btn-secondary w-full"
+                  onClick={() => navigate(`/programs/${p.id}`)}
+                >
+                  查看詳情
+                </button>
+              </div>
+            ))}
+            
+            {programs.length === 0 && (
+              <div className="text-center py-8 text-slate-600">
+                尚無訓練計畫
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

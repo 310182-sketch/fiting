@@ -105,16 +105,11 @@ export default function Templates() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-semibold text-slate-100">訓練模板</h2>
-          <p className="text-xs text-slate-500 mt-1">
-            建立自己的課表，之後在「開始」頁面從模板快速開啟訓練。
-          </p>
-        </div>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-sm font-semibold text-slate-900 border-l-4 border-emerald-500 pl-2">訓練模板集</h2>
         <button
           onClick={beginCreate}
-          className="rounded-lg bg-emerald-600 text-xs font-medium text-slate-50 px-3 py-1.5"
+          className="btn-primary py-2 px-3 text-xs"
         >
           新增模板
         </button>
@@ -122,36 +117,36 @@ export default function Templates() {
 
       <div className="space-y-3">
         {templates.length === 0 && (
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-600">
             目前還沒有自訂模板，先新增一個常用課表吧。
           </p>
         )}
         {templates.map(({ template, exercises }) => (
           <div
             key={template.id}
-            className="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm flex items-start justify-between gap-2"
+            className="rounded-lg border border-slate-200 bg-white/60 px-3 py-2 text-sm flex items-start justify-between gap-2"
           >
             <div>
-              <div className="font-medium text-slate-50 mb-1">{template.name}</div>
-              <div className="text-slate-400 flex flex-wrap gap-1">
+              <div className="font-medium text-slate-900 mb-1">{template.name}</div>
+              <div className="text-slate-600 flex flex-wrap gap-1">
                 {exercises.length > 0 ? (
                   exercises.map((e) => (
                     <span
                       key={e.id}
-                      className="px-2 py-0.5 rounded-full bg-slate-800 text-xs text-slate-100"
+                      className="px-2 py-0.5 rounded-full bg-white text-xs text-slate-900"
                     >
                       {e.name}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-slate-500">目前沒有預設動作</span>
+                  <span className="text-xs text-slate-600">目前沒有預設動作</span>
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-1 text-xs">
+            <div className="btn-group-sm">
               <button
                 onClick={() => beginEdit(template)}
-                className="rounded border border-slate-700 px-2 py-0.5 text-slate-200 hover:border-emerald-500"
+                className="btn-xs"
               >
                 編輯
               </button>
@@ -165,7 +160,7 @@ export default function Templates() {
                     void handleDelete(template);
                   }
                 }}
-                className="rounded border border-slate-700 px-2 py-0.5 text-slate-400 hover:border-rose-500 hover:text-rose-300"
+                className="btn-xs hover:border-rose-500 hover:text-rose-500"
               >
                 刪除
               </button>
@@ -175,36 +170,36 @@ export default function Templates() {
       </div>
 
       {hasEditor && (
-        <section className="mt-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 space-y-2 text-sm">
-          <h3 className="text-xs font-semibold text-slate-100 mb-1">
+        <section className="mt-2 rounded-xl border border-slate-200 bg-white/70 p-3 space-y-2 text-sm">
+          <h3 className="text-xs font-semibold text-slate-900 mb-1">
             {isCreating ? '新增模板' : '編輯模板'}
           </h3>
           <div className="space-y-2">
             <div className="space-y-1">
-              <label className="text-xs text-slate-400">模板名稱</label>
+              <label className="text-xs text-slate-600">模板名稱</label>
               <input
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 placeholder-slate-500"
+                className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder-slate-500"
                 placeholder="例如：全身力量 A、推拉腿 B"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs text-slate-400">包含動作（可多選）</label>
+              <label className="text-xs text-slate-600">包含動作（可多選）</label>
               {allExercises.length === 0 ? (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600">
                   目前尚未建立任何動作，請先到「設定 &gt; 動作管理」新增動作。
                 </p>
               ) : (
-                <div className="max-h-40 overflow-y-auto rounded-lg border border-slate-800 bg-slate-950/80 p-2 space-y-1">
+                <div className="max-h-40 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50/80 p-2 space-y-1">
                   {allExercises.map((ex) => (
                     <label
                       key={ex.id}
-                      className="flex items-center gap-2 text-xs text-slate-100"
+                      className="flex items-center gap-2 text-xs text-slate-900"
                     >
                       <input
                         type="checkbox"
-                        className="h-3 w-3 rounded border-slate-600 bg-slate-900"
+                        className="h-3 w-3 rounded border-slate-600 bg-white"
                         checked={selectedIds.includes(ex.id!)}
                         onChange={() => toggleExercise(ex.id!)}
                       />
@@ -215,19 +210,19 @@ export default function Templates() {
               )}
             </div>
           </div>
-          {error && <p className="text-xs text-rose-400">{error}</p>}
-          <div className="flex justify-end gap-2 pt-1 text-xs">
+          {error && <p className="text-xs text-rose-600">{error}</p>}
+          <div className="btn-group-sm justify-end pt-1 text-xs">
             <button
               type="button"
               onClick={cancelEdit}
-              className="rounded-lg border border-slate-700 px-3 py-1 text-slate-300"
+              className="btn-xs px-3 py-1"
             >
               取消
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="rounded-lg bg-emerald-600 px-3 py-1 text-slate-50 disabled:opacity-40"
+              className="btn-primary btn-sm disabled:opacity-40"
               disabled={!name.trim()}
             >
               儲存

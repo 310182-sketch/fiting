@@ -3,9 +3,47 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  @apply bg-slate-950 text-slate-50 antialiased;
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+@layer components {
+  .btn-base {
+    @apply transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400;
+  }
+
+  .btn-primary {
+    @apply btn-base w-full py-7 px-3 bg-emerald-600 text-white text-base font-bold rounded-xl shadow-sm hover:bg-emerald-500 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply btn-base w-full px-4 py-3 md:py-4 bg-white text-slate-700 text-sm font-medium rounded-lg border border-slate-200 hover:bg-slate-50 active:scale-[0.98];
+  }
+
+  .btn-tertiary {
+    @apply btn-base text-slate-600 text-sm hover:text-slate-800 transition-colors;
+  }
+
+  .btn-control {
+    @apply btn-base flex-1 px-3 py-3 md:py-4 rounded bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 text-sm font-medium active:scale-[0.98];
+  }
+
+  .btn-sm {
+    @apply btn-base w-full px-4 py-2 bg-white text-slate-700 text-sm rounded-lg border border-slate-200 hover:bg-slate-50;
+  }
+
+  .btn-xs {
+    @apply btn-base w-full px-3 py-1.5 rounded border border-slate-300 text-xs text-slate-700 hover:border-slate-400;
+  }
+
+  .btn-group-sm {
+    @apply flex flex-col gap-2;
+  }
+
+  .btn-group-md {
+    @apply flex flex-col gap-3 md:gap-4;
+  }
 }

@@ -128,33 +128,33 @@ export default function WorkoutPage() {
   }, [sets]);
 
   if (!workout) {
-    return <p className="text-sm text-slate-400">載入訓練中...</p>;
+    return <p className="text-sm text-slate-600">載入訓練中...</p>;
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold text-slate-100 mb-2">進行中訓練</h2>
+      <h2 className="text-sm font-semibold text-slate-900 mb-2">進行中訓練</h2>
 
       {restRemainingSeconds !== null && (
-        <section className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-xs flex flex-col gap-3">
+        <section className="rounded-lg border border-slate-200 bg-white/60 p-3 text-xs flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-slate-300 mb-1">休息倒數</div>
-              <div className="text-slate-100 text-sm font-semibold">
+              <div className="text-slate-700 mb-1">休息倒數</div>
+              <div className="text-slate-900 text-sm font-semibold">
                 {Math.max(restRemainingSeconds, 0)} 秒
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="btn-group-sm">
               <button
                 type="button"
-                className="px-2 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700"
+                className="btn-control flex-1 text-sm"
                 onClick={() => setRestRemainingSeconds(prev => (prev ?? 0) + 10)}
               >
                 +10s
               </button>
               <button
                 type="button"
-                className="px-2 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700"
+                className="btn-control flex-1 text-sm"
                 onClick={() => setRestRemainingSeconds(prev => Math.max((prev ?? 0) - 10, 0))}
               >
                 -10s
@@ -162,7 +162,7 @@ export default function WorkoutPage() {
             </div>
           </div>
           
-          <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div className="w-full h-1.5 rounded-full bg-white overflow-hidden">
             {isRestActive && restRemainingSeconds > 0 && (
               <div
                 className="h-full bg-emerald-500 transition-all"
@@ -173,11 +173,11 @@ export default function WorkoutPage() {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-               <span className="text-slate-400">預設：</span>
+               <span className="text-slate-600">預設：</span>
                <select 
                  value={restTotalSeconds}
                  onChange={(e) => setRestTotalSeconds(Number(e.target.value))}
-                 className="bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-slate-200"
+                 className="bg-slate-50 border border-slate-300 rounded px-1 py-0.5 text-slate-800"
                >
                  <option value={30}>30s</option>
                  <option value={60}>60s</option>
@@ -186,10 +186,10 @@ export default function WorkoutPage() {
                  <option value={180}>180s</option>
                </select>
             </div>
-            <div className="flex gap-2">
+            <div className="btn-group-sm">
               <button
                 type="button"
-                className="px-2 py-1 rounded bg-slate-800 text-slate-200"
+                className="btn-control flex-1 text-sm"
                 onClick={() => {
                   setRestRemainingSeconds(restTotalSeconds);
                   setIsRestActive(true);
@@ -199,7 +199,7 @@ export default function WorkoutPage() {
               </button>
               <button
                 type="button"
-                className="px-2 py-1 rounded bg-slate-800 text-slate-200"
+                className="btn-control flex-1 text-sm"
                 onClick={() => {
                   setIsRestActive(false);
                   setRestRemainingSeconds(null);
@@ -212,9 +212,9 @@ export default function WorkoutPage() {
         </section>
       )}
 
-      <form onSubmit={handleAddSet} className="space-y-3 rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-sm">
+      <form onSubmit={handleAddSet} className="space-y-4 shadow-sm rounded-xl bg-white p-5 text-base">
         <div className="space-y-1">
-          <label className="text-xs text-slate-400">動作</label>
+          <label className="text-xs text-slate-600">動作</label>
           <select
             value={selectedExerciseId ?? ''}
             onChange={(e) => {
@@ -224,7 +224,7 @@ export default function WorkoutPage() {
               setDuration('');
               setDistance('');
             }}
-            className="w-full rounded bg-slate-900 border border-slate-700 px-2 py-1 text-sm"
+            className="w-full rounded-xl bg-slate-50 border border-slate-300 px-4 py-3 text-base text-slate-900 outline-none focus:border-emerald-500"
           >
             {exercises.map((ex) => (
               <option key={ex.id} value={ex.id}>
@@ -234,81 +234,81 @@ export default function WorkoutPage() {
           </select>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-slate-300">
+        <div className="flex items-center gap-3 text-base font-medium text-slate-700 py-1">
           <label className="flex items-center gap-1">
             <input
               type="checkbox"
               checked={isWarmup}
               onChange={(e) => setIsWarmup(e.target.checked)}
-              className="accent-emerald-500"
+              className="w-5 h-5 accent-emerald-600 rounded-sm"
             />
             熱身組
           </label>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="grid grid-cols-2 gap-3 text-base">
           <input
             type="number"
             step="0.5"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             placeholder="重量 (kg)"
-            className="rounded bg-slate-900 border border-slate-700 px-2 py-1"
+            className="rounded-xl bg-slate-50 border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-emerald-500"
           />
           <input
             type="number"
             value={reps}
             onChange={(e) => setReps(e.target.value)}
             placeholder="次數"
-            className="rounded bg-slate-900 border border-slate-700 px-2 py-1"
+            className="rounded-xl bg-slate-50 border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-emerald-500"
           />
           <input
             type="number"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
             placeholder="時間 (分鐘，可選)"
-            className="rounded bg-slate-900 border border-slate-700 px-2 py-1 col-span-1"
+            className="rounded-xl bg-slate-50 border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-emerald-500"
           />
           <input
             type="number"
             value={distance}
             onChange={(e) => setDistance(e.target.value)}
             placeholder="距離 (km，可選)"
-            className="rounded bg-slate-900 border border-slate-700 px-2 py-1 col-span-1"
+            className="rounded-xl bg-slate-50 border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-emerald-500"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-emerald-500 text-slate-950 font-semibold py-2 text-sm mt-1"
+          className="btn-primary mt-4"
         >
           新增一組
         </button>
       </form>
 
-      <section className="space-y-2 text-xs">
+      <section className="space-y-3 text-sm mt-6">
         {exercises.map((ex) => {
           const setList = grouped.get(ex.id!) ?? [];
           if (setList.length === 0) return null;
           return (
-            <div key={ex.id} className="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2">
+            <div key={ex.id} className="rounded-xl shadow-sm bg-white p-4 mb-3">
               <div className="flex items-center justify-between mb-1">
-                <div className="font-medium text-slate-100 flex items-center gap-2">
-                  <span className={exerciseCompleted[ex.id!] ? 'text-emerald-300' : ''}>{ex.name}</span>
+                <div className="font-medium text-slate-900 flex items-center gap-2">
+                  <span className={exerciseCompleted[ex.id!] ? 'text-emerald-600' : ''}>{ex.name}</span>
                 </div>
-                <label className="flex items-center gap-1 text-xs text-emerald-300">
+                <label className="flex items-center gap-1 text-xs text-emerald-600">
                   <input
                     type="checkbox"
                     checked={!!exerciseCompleted[ex.id!]}
                     onChange={(e) => handleToggleCompleted(ex.id!, e.target.checked)}
-                    className="accent-emerald-500"
+                    className="w-5 h-5 accent-emerald-600 rounded-sm"
                   />
                   完成
                 </label>
               </div>
               <div className="space-y-1">
                 {setList.map((s) => (
-                  <div key={s.id} className="flex justify-between text-slate-300">
+                  <div key={s.id} className="flex justify-between text-slate-700">
                     <span>{s.isWarmup ? '熱身' : '正式'}</span>
                     <span>
                       {s.weight && s.reps && `${s.weight}kg × ${s.reps}`}
@@ -325,7 +325,7 @@ export default function WorkoutPage() {
 
       <div className="mt-4">
         <textarea
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-50 placeholder-slate-500"
+          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder-slate-500 focus:border-emerald-500 outline-none"
           placeholder="訓練筆記..."
           rows={2}
           value={workout?.note || ''}
@@ -339,7 +339,7 @@ export default function WorkoutPage() {
 
       <button
         onClick={handleFinish}
-        className="w-full rounded-lg bg-slate-800 text-slate-50 py-2 text-sm mt-2"
+        className="btn-primary mt-2"
       >
         結束訓練
       </button>

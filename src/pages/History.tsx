@@ -25,10 +25,10 @@ export default function History() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold text-slate-100 mb-2">歷史訓練</h2>
+      <h2 className="text-sm font-semibold text-slate-900 mb-2">歷史訓練</h2>
       <div className="space-y-3">
         {workouts.length === 0 && (
-          <p className="text-sm text-slate-400">尚無訓練紀錄，從「開始」頁面建立一筆吧。</p>
+          <p className="text-sm text-slate-600">尚無訓練紀錄，從「開始」頁面建立一筆吧。</p>
         )}
         {workouts.map((w) => (
           <HistoryItem
@@ -65,13 +65,13 @@ function HistoryItem({ workout, onClick, onShare }: { workout: Workout; onClick:
   return (
     <div 
       onClick={onClick}
-      className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 active:bg-slate-800 transition-colors cursor-pointer"
+      className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 active:bg-white transition-colors cursor-pointer"
     >
       <div>
-        <div className="font-medium text-slate-200 text-sm">
+        <div className="font-medium text-slate-800 text-sm">
           {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-slate-600 mt-1">
           {summary || '載入中...'}
         </div>
       </div>
@@ -80,7 +80,7 @@ function HistoryItem({ workout, onClick, onShare }: { workout: Workout; onClick:
           e.stopPropagation();
           onShare();
         }}
-        className="p-2 text-slate-400 hover:text-emerald-400"
+        className="p-2 text-slate-600 hover:text-emerald-600"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="18" cy="5" r="3"></circle>
@@ -105,7 +105,7 @@ function WorkoutDetail({ workoutId, onBack }: { workoutId: number; onBack: () =>
     getWorkoutDetails(db, workoutId).then((res) => setData(res));
   }, [workoutId]);
 
-  if (!data) return <div className="text-slate-400 text-sm">載入中...</div>;
+  if (!data) return <div className="text-slate-600 text-sm">載入中...</div>;
 
   const { workout, exercises, sets } = data;
   const date = new Date(workout.startTime).toLocaleString();
@@ -120,27 +120,27 @@ function WorkoutDetail({ workoutId, onBack }: { workoutId: number; onBack: () =>
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
+      <div className="btn-group-sm mb-4">
         <button
           onClick={onBack}
-          className="rounded-lg border border-slate-700 px-3 py-1 text-xs text-slate-300 hover:bg-slate-800"
+          className="btn-xs"
         >
           返回
         </button>
-        <h2 className="text-sm font-semibold text-slate-100">訓練詳情</h2>
+        <h2 className="text-sm font-semibold text-slate-900 flex-1">訓練詳情</h2>
       </div>
 
-      <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4 space-y-2">
-        <div className="text-xs text-slate-400">時間：{date}</div>
+      <div className="rounded-lg border border-slate-200 bg-white/60 p-4 space-y-2">
+        <div className="text-xs text-slate-600">時間：{date}</div>
         {duration !== null && (
-           <div className="text-xs text-slate-400">
+           <div className="text-xs text-slate-600">
              耗時：{duration} 分鐘
            </div>
         )}
-        <div className="pt-2 border-t border-slate-800 mt-2">
-            <label className="text-xs text-slate-400 block mb-1">訓練筆記</label>
+        <div className="pt-2 border-t border-slate-200 mt-2">
+            <label className="text-xs text-slate-600 block mb-1">訓練筆記</label>
             <textarea
-                className="w-full bg-slate-950/50 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:border-emerald-500 outline-none resize-none"
+                className="w-full bg-slate-50/50 border border-slate-300 rounded p-2 text-xs text-slate-800 focus:border-emerald-500 outline-none resize-none"
                 rows={3}
                 placeholder="寫點什麼..."
                 value={workout.note || ''}
@@ -155,12 +155,12 @@ function WorkoutDetail({ workoutId, onBack }: { workoutId: number; onBack: () =>
           if (exSets.length === 0) return null;
           
           return (
-            <div key={ex.id} className="rounded-lg border border-slate-800 bg-slate-900/40 p-3">
-              <h3 className="text-sm font-medium text-emerald-400 mb-2">{ex.name}</h3>
+            <div key={ex.id} className="rounded-lg border border-slate-200 bg-white/40 p-3">
+              <h3 className="text-sm font-medium text-emerald-600 mb-2">{ex.name}</h3>
               <div className="space-y-1">
                 {exSets.map((s, idx) => (
-                  <div key={s.id} className="flex items-center gap-2 text-xs text-slate-300">
-                    <span className="w-6 text-slate-500">#{idx + 1}</span>
+                  <div key={s.id} className="flex items-center gap-2 text-xs text-slate-700">
+                    <span className="w-6 text-slate-600">#{idx + 1}</span>
                     {s.isWarmup && <span className="text-amber-400 text-[10px] border border-amber-400/30 px-1 rounded">熱身</span>}
                     {ex.type === 'strength' ? (
                         <>

@@ -36,27 +36,27 @@ export default function ProgramDetails() {
   return (
     <div className="space-y-6 pb-20">
       <header>
-        <button onClick={() => navigate(-1)} className="text-slate-400 text-sm mb-2">
+        <button onClick={() => navigate(-1)} className="text-slate-600 text-sm mb-2">
           &larr; 返回計畫列表
         </button>
         <h1 className="text-2xl font-bold">{program.name}</h1>
-        <p className="text-slate-400">{program.description}</p>
+        <p className="text-slate-600">{program.description}</p>
       </header>
 
       <div className="space-y-6">
         {Object.entries(weeks).map(([weekNum, weekDays]) => (
           <div key={weekNum} className="space-y-3">
-            <h3 className="font-semibold text-emerald-400">第 {weekNum} 週</h3>
+            <h3 className="font-semibold text-emerald-600">第 {weekNum} 週</h3>
             <div className="grid gap-3">
               {weekDays.map(day => (
-                <div key={day.id} className="flex items-center justify-between p-4 bg-slate-900 rounded-xl border border-slate-800">
+                <div key={day.id} className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
                   <div>
-                    <div className="text-xs text-slate-500 mb-1">Day {day.day}</div>
+                    <div className="text-xs text-slate-600 mb-1">Day {day.day}</div>
                     <div className="font-medium">{day.name}</div>
                   </div>
                   <button
                     onClick={() => startDay(day.templateId)}
-                    className="px-4 py-2 bg-emerald-600/20 text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-600/30"
+                    className="btn-sm"
                   >
                     開始
                   </button>
